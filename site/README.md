@@ -7,11 +7,11 @@ Minimal 米白杂志风（纸色底 / 衬线标题 / 朱红强调），全站固
 
 | 文件 | 内容 |
 |---|---|
-| `index.html` | 定稿首页：痛点叙事 01-05 / 资产盘点 / 快速开始 / 演示入口，顶部导航 + 多栏 footer |
-| `demo-doctor.html` | 交互演示：aeox doctor 体检（3 种场景，终端打字动画） |
-| `demo-diagnostics.html` | 交互演示：构建诊断对比（日志泥潭 vs 结构化摘要） |
-| `demo-rules.html` | 交互演示：规则注入模拟（8 条规则按上下文点亮） |
-| `demo-agents.html` | 交互演示：4 个 Agent 预设提示词预览 |
+| `index.html` | 定稿首页：痛点叙事 01-05 / 资产盘点 / 快速开始 / 体验入口，顶部导航 + AEOX 家族式大页脚 |
+| `doctor.html` | 在线体验：aeox doctor 体检（3 种场景，终端打字动画） |
+| `diagnostics.html` | 在线体验：构建诊断对比（日志泥潭 vs 结构化摘要） |
+| `rules.html` | 在线体验：规则注入模拟（8 条规则按上下文点亮） |
+| `agents.html` | 在线体验：4 个 Agent 预设提示词预览 |
 | `install.ps1` | 一键安装脚本：`iwr -useb https://cli.aeox.uk/install.ps1 \| iex` |
 
 ## 本地预览
@@ -23,7 +23,7 @@ python -m http.server 8080 --directory site
 
 ## 部署
 
-部署目标：**Hostinger → cli.aeox.uk**（上传全部 5 个 .html 到站点根目录）。也适用于任意静态托管：
+部署目标：**Hostinger → cli.aeox.uk**（上传全部 6 个文件：5 个 .html + install.ps1 到站点根目录）。也适用于任意静态托管：
 
 - **nginx**：`root` 指向本目录
 - **对象存储**（OBS/COS/S3）：直接上传

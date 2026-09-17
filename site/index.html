@@ -20,7 +20,8 @@ html { scroll-behavior: smooth; scrollbar-gutter: stable; }
 body { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.85; font-size: 16px; }
 a { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--ink-3); }
 a:hover { text-decoration-color: var(--accent); color: var(--accent); }
-.wrap { max-width: 760px; margin: 0 auto; padding: 0 26px; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 26px; }
+.wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 26px; }
 .ed, .quote { scroll-margin-top: 76px; }
 
 /* nav */
@@ -94,7 +95,7 @@ footer li a { text-decoration: none; color: var(--ink-2); }
 footer li a:hover { color: var(--accent); text-decoration: none; }
 footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; color: var(--accent); }
 .foot-bar { border-top: 1px solid #e8e5dd; padding: 22px 0 30px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-3); }
-.foot-bar .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; width: 100%; }
+.foot-bar .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; width: 100%; max-width: 1080px; }
 .foot-bar a { color: var(--ink-2); }
 .foot-bar a:hover { color: var(--accent); }
 </style>
@@ -106,10 +107,10 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     <a class="brand" href="#">aeox<em>-cli</em></a>
     <div class="nav-links">
       <a href="#" class="here">首页</a>
-      <a href="demo-doctor.html">体检</a>
-      <a href="demo-diagnostics.html">构建诊断</a>
-      <a href="demo-rules.html">规则注入</a>
-      <a href="demo-agents.html">Agents</a>
+      <a href="doctor.html">体检</a>
+      <a href="diagnostics.html">构建诊断</a>
+      <a href="rules.html">规则注入</a>
+      <a href="agents.html">Agents</a>
       <a class="hot" href="#quickstart">v0.1.0</a>
     </div>
   </div>
@@ -230,25 +231,25 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
   <div class="ed" id="demos" style="margin-top:56px">
     <div class="no">※</div>
     <div>
-      <h2>交互<span>演示</span></h2>
-      <p>四个可操作的演示页，亲手试试 aeox 的工作机制 —— 无需安装任何东西。</p>
+      <h2>在线<span>体验</span></h2>
+      <p>四个可交互的体验页，亲手试试 aeox 的工作机制 —— 无需安装任何东西。</p>
       <div class="demos">
-        <a href="demo-doctor.html"><b>aeox doctor</b><span>环境体检 · 3 种场景</span></a>
-        <a href="demo-diagnostics.html"><b>构建诊断</b><span>日志泥潭 vs 结构化摘要</span></a>
-        <a href="demo-rules.html"><b>规则注入</b><span>8 条规则按上下文点亮</span></a>
-        <a href="demo-agents.html"><b>Agent 预设</b><span>4 个角色提示词预览</span></a>
+        <a href="doctor.html"><b>aeox doctor</b><span>环境体检 · 3 种场景</span></a>
+        <a href="diagnostics.html"><b>构建诊断</b><span>日志泥潭 vs 结构化摘要</span></a>
+        <a href="rules.html"><b>规则注入</b><span>8 条规则按上下文点亮</span></a>
+        <a href="agents.html"><b>Agent 预设</b><span>4 个角色提示词预览</span></a>
       </div>
     </div>
   </div>
 
   <div class="foot-cta">
     <p>无需安装，现在就试。</p>
-    <a class="l" href="#demos">体验交互演示 →</a>
+    <a class="l" href="#demos">进入在线体验 →</a>
   </div>
 </div>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap wrap-wide">
     <div class="foot-grid">
       <div>
         <p class="foot-logo">AEOX <em>Lab</em></p>
@@ -260,7 +261,7 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
         <ul>
           <li><a href="#features">特性</a></li>
           <li><a href="#quickstart">快速开始</a></li>
-          <li><a href="#demos">交互演示</a></li>
+          <li><a href="#demos">在线体验</a></li>
           <li><a href="https://github.com/yaolumen/aeox-cli" target="_blank" rel="noopener">GitHub 仓库</a></li>
         </ul>
       </div>
@@ -277,7 +278,7 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
         <h4>资源与商店</h4>
         <ul>
           <li><a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free downloads</a> <i>go.aeox.uk</i></li>
-          <li><a href="https://ko-fi.com/yourname" target="_blank" rel="noopener">Ko-fi Shop</a> <i>Premium</i></li>
+          <li><a href="https://ko-fi.com/yaolumen" target="_blank" rel="noopener">Ko-fi Shop</a> <i>Premium</i></li>
           <li><a href="https://cli.aeox.uk/">cli.aeox.uk</a> <i>本站直链</i></li>
         </ul>
       </div>
@@ -285,7 +286,7 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     <div class="foot-bar">
       <div class="wrap">
         <span>© 2026 AEOX · aeox-cli — Part of the AEOX network</span>
-        <span>独立第三方项目 · 基于 DevEco Code 官方扩展机制 · <a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free on go.aeox.uk</a> · <a href="https://ko-fi.com/yourname" target="_blank" rel="noopener">Premium on Ko-fi</a></span>
+        <span>独立第三方项目 · 基于 DevEco Code 官方扩展机制 · <a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free on go.aeox.uk</a> · <a href="https://ko-fi.com/yaolumen" target="_blank" rel="noopener">Premium on Ko-fi</a></span>
       </div>
     </div>
   </div>
