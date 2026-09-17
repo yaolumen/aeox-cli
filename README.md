@@ -113,8 +113,10 @@ aeox-cli/
 └── site/                cli.aeox.uk 展示站源码（纯静态单文件，含 4 个交互演示页）
 ```
 
-## 路线图
+## 路线图（0.1.1 候选）
 
+- 修正 npm 包内 README 的"12 项体检"为 13 项（发布早于修正，需随版本更新）
+- 泛化 agent / rules 中的个人化文案（来啦系列、com.cheeseopt 等示例化）
 - `doctor` 增加在线设备连通性检查（INFO 级，不阻断体检）
 - `store_screenshots` 批量截图 / `version_bump` / `new_app` 应用模板
 - 跨平台支持（macOS / Linux symlink）

@@ -23,7 +23,9 @@ python -m http.server 8080 --directory site
 
 ## 部署
 
-部署目标：**Hostinger → cli.aeox.uk**（上传全部 6 个文件：5 个 .html + install.ps1 到站点根目录）。也适用于任意静态托管：
+**已上线：https://cli.aeox.uk** （Hostinger，2026-09-17 部署并验证：6 文件 200 / HTTP 301 强制 HTTPS / 旧 demo-\* 页面 404 无残留）
+
+重新部署：覆盖上传本目录全部 6 个文件（5 个 .html + install.ps1）到 Hostinger 站点根目录。也适用于任意静态托管：
 
 - **nginx**：`root` 指向本目录
 - **对象存储**（OBS/COS/S3）：直接上传
