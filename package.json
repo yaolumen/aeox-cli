@@ -5,6 +5,10 @@
   "license": "MIT",
   "author": "YAOLUMEN TECHNOLOGIES LTD",
   "homepage": "https://cli.aeox.uk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaolumen/aeox-cli.git"
+  },
   "keywords": ["harmonyos", "arkts", "deveco", "opencode", "ai-coding", "cli", "devtools"],
   "type": "module",
   "bin": {
