@@ -39,7 +39,7 @@ aeox install
 ## 验证安装
 
 ```powershell
-aeox doctor    # 12 项环境体检
+aeox doctor    # 13 项环境体检
 aeox status    # 已部署资产一览
 ```
 
@@ -94,7 +94,7 @@ aeox status    # 已部署资产一览
 ```
 aeox              横幅 + 帮助
 aeox install      部署 junction + 插件注册 + 依赖安装（幂等）
-aeox doctor       环境体检（12 项：Node/仓库/依赖/配置/链接/skills/注册/deveco/devecocli/SDK 等）
+aeox doctor       环境体检（13 项：Node/仓库/依赖/配置/链接/skills/注册/deveco/devecocli/SDK 等）
 aeox status       已部署的工具、规则、技能、链接状态
 aeox version      版本号
 ```

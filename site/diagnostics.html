@@ -67,10 +67,22 @@ header p { color: var(--text-2); margin-top: 8px; }
 .hint { max-width: 700px; text-align: center; margin: 18px auto 26px; font-size: 13px; color: var(--text-3); }
 .hint code { font-family: var(--mono); color: var(--aeox); }
 
-footer { border-top: 1px solid var(--border); }
-.foot-in { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 24px 0 34px; font-size: 12.5px; color: var(--text-3); }
-footer a { color: var(--text-3); text-decoration: none; }
-footer a:hover { color: var(--aeox); text-decoration: none; }
+.wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+footer { border-top: 1px solid var(--border); padding: 46px 0 0; font-size: 14px; color: var(--text-2); }
+.foot-grid { display: grid; grid-template-columns: 1.5fr .8fr 1.3fr 1fr; gap: 40px; padding-bottom: 42px; }
+@media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+.foot-logo { font-family: var(--serif); font-size: 27px; font-style: italic; line-height: 1.2; color: var(--text); }
+.foot-logo em { color: var(--aeox); }
+.foot-desc { margin-top: 12px; font-size: 13px; color: var(--text-3); max-width: 260px; line-height: 1.7; }
+footer h4 { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-3); font-weight: 600; margin-bottom: 12px; }
+footer ul { list-style: none; }
+footer li { padding: 5px 0; font-size: 13.5px; }
+footer li a { text-decoration: none; color: var(--text-2); }
+footer li a:hover { color: var(--aeox); text-decoration: none; }
+footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; color: var(--aeox); }
+.foot-bar { border-top: 1px solid var(--border); padding: 20px 0 28px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-3); }
+.foot-bar a { color: var(--text-2); text-decoration: none; }
+.foot-bar a:hover { color: var(--aeox); }
 </style>
 </head>
 <body>
@@ -118,10 +130,10 @@ WatchMode      : false
      Error Message: ... (SDK benign 噪音 #2)</span>
 <span class="noise">ERROR: ArkTS:ERROR File: C:\...\@arkts.lang.d.ets:10505001
      Error Message: ... (SDK benign 噪音 #3~#6，省略 12 行)</span>
-<span class="real" id="realErr"><span class="r">ERROR: ArkTS:ERROR File: D:\project\harmony-apps\QinziSchedule\entry\src\main\ets\pages\Index.ets:32:15
+<span class="real" id="realErr"><span class="r">ERROR: ArkTS:ERROR File: D:\project\harmony-apps\MyApp\entry\src\main\ets\pages\Index.ets:32:15
      ERROR: ArkTS Compiler Error
      Error Message: Type 'string' is not assignable to type 'number'. At File: D:\project\
-harmony-apps\QinziSchedule\entry\src\main\ets\pages\Index.ets:32:15</span></span>
+harmony-apps\MyApp\entry\src\main\ets\pages\Index.ets:32:15</span></span>
 <span class="r">COMPILE RESULT:FAIL {ERROR:7}</span>
 <span class="d">... 以下还有 800+ 行 task trace 与依赖树输出 ...</span></span>
       </div>
@@ -141,9 +153,44 @@ harmony-apps\QinziSchedule\entry\src\main\ets\pages\Index.ets:32:15</span></span
 </main>
 
 <footer>
-  <div class="wrap foot-in">
-    <span>© 2026 AEOX · aeox-cli — Part of the AEOX network</span>
-    <span><a href="index.html">← 返回首页</a> · 独立第三方 · 基于 DevEco Code 官方扩展机制</span>
+  <div class="wrap-wide">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-logo">AEOX <em>Lab</em></p>
+        <p class="foot-desc">一个独立实验室，构建横跨 SEO、AI、量化与东方能量的透明浏览器端工具。不臃肿、不追踪 —— view-source 即可验证。</p>
+        <p class="foot-desc" style="margin-top:10px; font-style:italic">An independent lab building transparent, browser-native tools across SEO, AI, quant and eastern energy. No bloat, no tracking — view-source and verify.</p>
+      </div>
+      <div>
+        <h4>本站</h4>
+        <ul>
+          <li><a href="index.html#features">特性</a></li>
+          <li><a href="index.html#quickstart">快速开始</a></li>
+          <li><a href="index.html#demos">在线体验</a></li>
+          <li><a href="https://github.com/yaolumen/aeox-cli" target="_blank" rel="noopener">GitHub 仓库</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>AEOX Network</h4>
+        <ul>
+          <li><a href="https://aeox.uk/" target="_blank" rel="noopener">AEOX</a> <i>AI Answer Engine Diagnostics</i></li>
+          <li><a href="https://anchor.aeox.uk/" target="_blank" rel="noopener">Anchor</a> <i>Content Automation Engine</i></li>
+          <li><a href="https://cli.aeox.uk/">aeox-cli</a> <i>AI Dev Toolbox</i></li>
+          <li><a href="https://shui.aeox.uk/" target="_blank" rel="noopener">Shui</a> <i>Eastern Energy Reports</i></li>
+        </ul>
+      </div>
+      <div>
+        <h4>资源与商店</h4>
+        <ul>
+          <li><a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free downloads</a> <i>go.aeox.uk</i></li>
+          <li><a href="https://ko-fi.com/yaolumen" target="_blank" rel="noopener">Ko-fi Shop</a> <i>Premium</i></li>
+          <li><a href="https://cli.aeox.uk/">cli.aeox.uk</a> <i>本站直链</i></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bar">
+      <span>© 2026 AEOX · aeox-cli — Part of the AEOX network</span>
+      <span>独立第三方项目 · 基于 DevEco Code 官方扩展机制 · <a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free on go.aeox.uk</a> · <a href="https://ko-fi.com/yaolumen" target="_blank" rel="noopener">Premium on Ko-fi</a></span>
+    </div>
   </div>
 </footer>
 

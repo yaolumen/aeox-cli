@@ -124,7 +124,7 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     <p class="meta-line">
       <span>version <b>0.1.0</b></span>
       <span>node <b>&gt;= 22.18</b></span>
-      <span>runtime deps <b>0</b></span>
+      <span>cli deps <b>0</b></span>
       <span>fork <b>none</b></span>
       <span>build <b>none required</b></span>
     </p>
@@ -161,20 +161,18 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     <div>
       <h2>上架之前，<span>一键体检</span></h2>
       <p>配置完整性、敏感权限、协议页、签名材料。audit_check 输出一份可勾选的提审清单 —— 心安，是上线前最好的状态。</p>
-      <div class="cm">$ audit_check ./QinziSchedule → 0 ERROR / 1 WARN</div>
+      <div class="cm">$ audit_check ./MyApp → 0 ERROR / 1 WARN</div>
     </div>
   </div>
   <div class="ed" id="quickstart">
     <div class="no">05</div>
     <div>
-      <h2>三步启用，<span>随装随卸</span></h2>
-      <p>克隆仓库，npm link 注册全局命令，aeox install 完成全部接线（幂等）。拔掉即走，宿主一个字节都不用改。</p>
-      <div class="code"><pre><span class="c"># 1. 克隆并注册全局命令</span>
-<span class="p">$</span> git clone &lt;repo&gt; aeox-cli && cd aeox-cli
-<span class="p">$</span> npm link
-<span class="c"># 2. 部署：junction 链接 + 插件注册 + 依赖安装（幂等）</span>
-<span class="p">$</span> aeox install
-<span class="c"># 3. 验证：12 项体检全绿，或在会话内输入 /aeox</span>
+      <h2>两步启用，<span>随装随卸</span></h2>
+      <p>一行命令装好并接线（幂等），一行命令验证。卸载只需移除链接与全局包 —— 宿主一个字节都不用改。</p>
+      <div class="code"><pre><span class="c"># 1. 一键安装：npm 全局安装 + junction 链接 + 插件注册（幂等）</span>
+<span class="p">$</span> iwr -useb https://cli.aeox.uk/install.ps1 | iex
+<span class="c">#    手动等价：npm install -g aeox-cli && aeox install</span>
+<span class="c"># 2. 验证：13 项体检全绿，或在会话内输入 /aeox</span>
 <span class="p">$</span> aeox doctor</pre></div>
     </div>
   </div>
