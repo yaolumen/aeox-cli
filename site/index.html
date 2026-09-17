@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aeox-cli — HarmonyOS + Node.js 双栈 AI 编程增强层</title>
+<style>
+:root {
+  --paper: #faf9f6; --ink: #1a1815; --ink-2: #6e6a61; --ink-3: #a8a49a;
+  --accent: #d1451b;
+  --serif: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  --mono: "Cascadia Code", Consolas, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.85; font-size: 16px; }
+a { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--ink-3); }
+a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 26px; }
+.ed, .quote { scroll-margin-top: 76px; }
+
+/* nav */
+nav { position: sticky; top: 0; z-index: 10; background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #e8e5dd; }
+nav .wrap { max-width: 1080px; }
+.nav-in { display: flex; align-items: center; gap: 30px; height: 58px; }
+.brand { font-family: var(--serif); font-size: 19px; font-style: italic; text-decoration: none; letter-spacing: -.3px; }
+.brand em { color: var(--accent); }
+.brand:hover { color: var(--ink); text-decoration: none; }
+.nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 13.5px; }
+.nav-links a { text-decoration: none; color: var(--ink-2); }
+.nav-links a:hover { color: var(--accent); text-decoration: none; }
+.nav-links a.here { color: var(--accent); }
+.nav-links a.hot { color: var(--accent); }
+@media (max-width: 640px) { .nav-links { gap: 14px; font-size: 12.5px; } .brand { font-size: 17px; } }
+
+header { padding: 90px 0 70px; }
+.kicker { font-family: var(--sans); font-size: 12.5px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+header h1 { font-family: var(--serif); font-size: clamp(42px, 8vw, 72px); line-height: 1.08; font-weight: 400; letter-spacing: -1px; margin-top: 20px; }
+header h1 em { font-style: italic; color: var(--accent); }
+.lede { font-family: var(--serif); font-size: 21px; line-height: 1.65; color: var(--ink-2); margin-top: 30px; max-width: 640px; }
+.meta-line { margin-top: 34px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); letter-spacing: .5px; }
+.meta-line b { color: var(--accent); font-weight: 400; }
+.meta-line span { margin-right: 22px; white-space: nowrap; }
+.rule { border: none; border-top: 1px solid #e8e5dd; margin: 56px 0; }
+
+.ed { display: grid; grid-template-columns: 90px 1fr; gap: 26px; padding: 34px 0; border-top: 1px solid #e8e5dd; }
+.ed .no { font-family: var(--serif); font-size: 34px; color: var(--ink-3); font-style: italic; }
+.ed h2 { font-family: var(--serif); font-size: 26px; font-weight: 400; letter-spacing: -.3px; }
+.ed h2 span { color: var(--accent); }
+.ed p { color: var(--ink-2); margin-top: 12px; font-size: 15.5px; max-width: 560px; }
+.ed .cm { font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); margin-top: 14px; }
+
+.quote { padding: 60px 0; text-align: center; }
+.quote p { font-family: var(--serif); font-size: clamp(22px, 3.5vw, 30px); font-style: italic; line-height: 1.5; }
+.quote span { display: block; margin-top: 18px; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-3); }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+.col h3 { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 16px; }
+.col ul { list-style: none; }
+.col li { padding: 9px 0; border-bottom: 1px dotted #e0dcd2; font-size: 15px; display: flex; justify-content: space-between; gap: 16px; }
+.col li i { font-family: var(--mono); font-style: normal; font-size: 12.5px; color: var(--accent); white-space: nowrap; }
+
+.code { background: #f3f1ea; border: 1px solid #e8e5dd; padding: 26px 30px; margin-top: 18px; overflow-x: auto; }
+.code pre { font-family: var(--mono); font-size: 13px; line-height: 2; color: var(--ink); }
+.code .c { color: var(--ink-3); }
+.code .p { color: var(--accent); }
+
+.demos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+@media (max-width: 640px) { .demos { grid-template-columns: 1fr; } }
+.demos a { display: block; border: 1px solid #e8e5dd; padding: 16px 20px; font-size: 14.5px; text-decoration: none; }
+.demos a:hover { border-color: var(--accent); }
+.demos a b { font-weight: 600; }
+.demos a span { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+
+.foot-cta { text-align: center; padding: 70px 0 90px; }
+.foot-cta p { font-family: var(--serif); font-size: 26px; }
+.foot-cta .l { display: inline-block; margin-top: 22px; font-size: 15px; color: var(--accent); }
+
+footer { border-top: 1px solid #e8e5dd; padding: 60px 0 0; font-size: 14px; color: var(--ink-2); }
+.foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 50px; }
+@media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+.foot-logo { font-family: var(--serif); font-size: 30px; font-style: italic; line-height: 1.2; }
+.foot-logo em { color: var(--accent); }
+.foot-desc { margin-top: 14px; font-size: 13.5px; color: var(--ink-3); max-width: 260px; }
+footer h4 { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-bottom: 14px; }
+footer ul { list-style: none; }
+footer li { padding: 5px 0; font-size: 13.5px; }
+footer li a { text-decoration: none; color: var(--ink-2); }
+footer li a:hover { color: var(--accent); text-decoration: none; }
+footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; color: var(--accent); }
+.foot-bar { border-top: 1px solid #e8e5dd; padding: 22px 0 30px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-3); }
+.foot-bar .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; width: 100%; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="#">aeox<em>-cli</em></a>
+    <div class="nav-links">
+      <a href="#" class="here">首页</a>
+      <a href="demo-doctor.html">体检</a>
+      <a href="demo-diagnostics.html">构建诊断</a>
+      <a href="demo-rules.html">规则注入</a>
+      <a href="demo-agents.html">Agents</a>
+      <a class="hot" href="#quickstart">v0.1.0</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">DevEco Code Enhancement</div>
+    <h1>让 AI 编程助手<br>真正<em>懂</em>鸿蒙。</h1>
+    <p class="lede">aeox-cli 是一层薄薄的增强外挂：十三个工具、八条规则、四个角色、两个技能、两个插件。它不替代任何东西 —— 只是把一线经验固化成 AI 的肌肉记忆。</p>
+    <p class="meta-line">
+      <span>version <b>0.1.0</b></span>
+      <span>node <b>&gt;= 22.18</b></span>
+      <span>runtime deps <b>0</b></span>
+      <span>fork <b>none</b></span>
+      <span>build <b>none required</b></span>
+    </p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="ed" id="features">
+    <div class="no">01</div>
+    <div>
+      <h2>构建失败，<span>一眼定因</span></h2>
+      <p>ArkTS 编译输出的泥潭里，真实错误只有一条，噪音却有六条。build-diagnostics 插件在输出前注入结构化诊断 —— 错误码、文件、行号，以及下一步建议。</p>
+      <div class="cm">$ [aeox 构建诊断] → [10505001] Index.ets:32:15</div>
+    </div>
+  </div>
+  <div class="ed">
+    <div class="no">02</div>
+    <div>
+      <h2>API 行为，<span>先查再写</span></h2>
+      <p>模型凭记忆写 ArkUI 是过时写法的重灾区。docs_search 直连鸿蒙官方文档，规则强制：不确定的 API，禁止凭记忆作答。</p>
+      <div class="cm">$ docs_search "@Builder param 传递" → docs_read …</div>
+    </div>
+  </div>
+  <div class="ed">
+    <div class="no">03</div>
+    <div>
+      <h2>修过的坑，<span>不再重踩</span></h2>
+      <p>每个非平凡 bug 修复后入库：症状、根因、解法。下次遇到同款报错，先查库 —— 历史结论直接复用，排查时间从小时到秒。</p>
+      <div class="cm">$ kb_add "audit_check JSON5 正则" && kb_search "带引号键"</div>
+    </div>
+  </div>
+  <div class="ed">
+    <div class="no">04</div>
+    <div>
+      <h2>上架之前，<span>一键体检</span></h2>
+      <p>配置完整性、敏感权限、协议页、签名材料。audit_check 输出一份可勾选的提审清单 —— 心安，是上线前最好的状态。</p>
+      <div class="cm">$ audit_check ./QinziSchedule → 0 ERROR / 1 WARN</div>
+    </div>
+  </div>
+  <div class="ed" id="quickstart">
+    <div class="no">05</div>
+    <div>
+      <h2>三步启用，<span>随装随卸</span></h2>
+      <p>克隆仓库，npm link 注册全局命令，aeox install 完成全部接线（幂等）。拔掉即走，宿主一个字节都不用改。</p>
+      <div class="code"><pre><span class="c"># 1. 克隆并注册全局命令</span>
+<span class="p">$</span> git clone &lt;repo&gt; aeox-cli && cd aeox-cli
+<span class="p">$</span> npm link
+<span class="c"># 2. 部署：junction 链接 + 插件注册 + 依赖安装（幂等）</span>
+<span class="p">$</span> aeox install
+<span class="c"># 3. 验证：12 项体检全绿，或在会话内输入 /aeox</span>
+<span class="p">$</span> aeox doctor</pre></div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <div class="quote">
+    <p>「装上即用，拔掉即走。<br>宿主一个字节都不用改。」</p>
+    <span>零 fork 扩展原则</span>
+  </div>
+
+  <hr class="rule">
+
+  <div class="cols">
+    <div class="col">
+      <h3>工具 Tools × 13</h3>
+      <ul>
+        <li>构建与检查 <i>devecocli_build · lint</i></li>
+        <li>提审体检 <i>audit_check</i></li>
+        <li>文档检索 <i>docs_search · read</i></li>
+        <li>知识库 <i>kb_add · search</i></li>
+        <li>设备链路 <i>device_list · log · run</i></li>
+        <li>截图·原型·签名 <i>ui_screenshot · proto_shot · signature_generate</i></li>
+      </ul>
+      <h3 style="margin-top:34px">插件 Plugins × 2</h3>
+      <ul>
+        <li>规则动态注入 <i>ai-rules</i></li>
+        <li>构建诊断后处理 <i>build-diagnostics</i></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>角色 Agents × 4</h3>
+      <ul>
+        <li>鸿蒙开发 <i>harmony</i></li>
+        <li>根因诊断 <i>harmony-debug</i></li>
+        <li>原型设计 <i>proto</i></li>
+        <li>Node 后端 <i>node</i></li>
+      </ul>
+      <h3 style="margin-top:34px">技能 Skills × 2</h3>
+      <ul>
+        <li>鸿蒙工作流惯例 <i>aeox-harmony-workflow</i></li>
+        <li>提审流水线 <i>aeox-submission</i></li>
+      </ul>
+      <h3 style="margin-top:34px">命令 CLI</h3>
+      <ul>
+        <li>部署 <i>aeox install</i></li>
+        <li>体检 <i>aeox doctor</i></li>
+        <li>状态 <i>aeox status</i></li>
+        <li>会话内验证 <i>/aeox</i></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ed" id="demos" style="margin-top:56px">
+    <div class="no">※</div>
+    <div>
+      <h2>交互<span>演示</span></h2>
+      <p>四个可操作的演示页，亲手试试 aeox 的工作机制 —— 无需安装任何东西。</p>
+      <div class="demos">
+        <a href="demo-doctor.html"><b>aeox doctor</b><span>环境体检 · 3 种场景</span></a>
+        <a href="demo-diagnostics.html"><b>构建诊断</b><span>日志泥潭 vs 结构化摘要</span></a>
+        <a href="demo-rules.html"><b>规则注入</b><span>8 条规则按上下文点亮</span></a>
+        <a href="demo-agents.html"><b>Agent 预设</b><span>4 个角色提示词预览</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot-cta">
+    <p>无需安装，现在就试。</p>
+    <a class="l" href="#demos">体验交互演示 →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-logo">aeox<em>-cli</em></p>
+        <p class="foot-desc">HarmonyOS + Node.js 双栈 AI 编程环境增强层。把一线经验固化成 AI 的肌肉记忆。</p>
+      </div>
+      <div>
+        <h4>页面</h4>
+        <ul>
+          <li><a href="#features">特性</a></li>
+          <li><a href="#quickstart">快速开始</a></li>
+          <li><a href="#demos">交互演示</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>演示</h4>
+        <ul>
+          <li><a href="demo-doctor.html">aeox doctor</a></li>
+          <li><a href="demo-diagnostics.html">构建诊断</a></li>
+          <li><a href="demo-rules.html">规则注入</a></li>
+          <li><a href="demo-agents.html">Agent 预设</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>命令</h4>
+        <ul>
+          <li><a href="#quickstart">安装 <i>aeox install</i></a></li>
+          <li><a href="#quickstart">体检 <i>aeox doctor</i></a></li>
+          <li><a href="#quickstart">状态 <i>aeox status</i></a></li>
+          <li><a href="#quickstart">会话内验证 <i>/aeox</i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bar">
+      <div class="wrap">
+        <span>© 2026 YAOLUMEN TECHNOLOGIES LTD · aeox-cli v0.1.0</span>
+        <span>独立第三方项目 · 基于 DevEco Code 官方扩展机制</span>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

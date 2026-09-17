@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演示 · 规则注入 — aeox-cli</title>
+<style>
+:root {
+  --bg: #faf9f6; --bg-2: #f3f1ea; --panel: #ffffff; --panel-2: #f3f1ea;
+  --border: #e8e5dd; --border-2: #d9d5ca;
+  --text: #1a1815; --text-2: #6e6a61; --text-3: #a8a49a;
+  --aeox: #d1451b; --aeox-deep: #b23a15; --aeox-dim: rgba(209, 69, 27, 0.07);
+  --accent: #b07d2b; --ok: #3e7c4f;
+  --serif: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+  --mono: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+html { scrollbar-gutter: stable; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.7; min-height: 100vh; }
+a { color: var(--aeox); text-decoration: none; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+nav { position: sticky; top: 0; z-index: 10; background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.nav-in { display: flex; align-items: center; gap: 30px; height: 58px; }
+.brand { font-family: var(--serif); font-size: 19px; font-style: italic; color: var(--text); text-decoration: none; letter-spacing: -.3px; }
+.brand em { color: var(--aeox); }
+.brand:hover { color: var(--text); text-decoration: none; }
+.nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 13.5px; }
+.nav-links a { color: var(--text-2); text-decoration: none; }
+.nav-links a:hover, .nav-links a.here { color: var(--aeox); text-decoration: none; }
+.nav-links a.hot { color: var(--aeox); }
+@media (max-width: 640px) { .nav-links { gap: 14px; font-size: 12.5px; } .brand { font-size: 17px; } }
+
+header { text-align: center; padding: 50px 0 30px; }
+.crumb { font-family: var(--mono); font-size: 13px; color: var(--text-3); margin-bottom: 16px; }
+.crumb b { color: var(--aeox); font-weight: 500; }
+header h1 { font-size: clamp(26px, 4vw, 34px); font-family: var(--serif); font-weight: 400; letter-spacing: -.5px; }
+header p { color: var(--text-2); margin-top: 8px; }
+
+.ctx { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-bottom: 22px; }
+.ctx h3 { font-size: 13px; color: var(--text-3); font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { font-family: var(--mono); font-size: 12.8px; color: var(--text-2); background: var(--panel-2); border: 1px solid var(--border-2); border-radius: 8px; padding: 8px 14px; cursor: pointer; transition: all .18s; }
+.chip:hover { border-color: var(--aeox); color: var(--text); }
+.chip.on { background: var(--aeox); color: #fff; font-weight: 600; }
+.chips + .ctx-note { margin-top: 14px; }
+
+.rules { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.rule { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px; opacity: .55; transition: all .25s; position: relative; }
+.rule.on { opacity: 1; border-color: var(--aeox); background: linear-gradient(160deg, var(--panel), var(--aeox-dim)); box-shadow: 0 8px 28px rgba(26,24,21,.06); }
+.rule .st { position: absolute; top: 14px; right: 14px; font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
+.rule.on .st { color: var(--ok); }
+.rule h4 { font-family: var(--mono); font-size: 14.5px; color: var(--text); }
+.rule.on h4 { color: var(--aeox); }
+.rule p { font-size: 12.5px; color: var(--text-2); margin-top: 6px; min-height: 42px; }
+.rule .tg { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 10px; line-height: 1.6; }
+.rule .tg b { color: var(--text-2); font-weight: 500; }
+
+.term { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 14px 40px rgba(26,24,21,0.08); margin-bottom: 26px; }
+
+footer { border-top: 1px solid var(--border); }
+.foot-in { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 24px 0 34px; font-size: 12.5px; color: var(--text-3); }
+footer a { color: var(--text-3); text-decoration: none; }
+footer a:hover { color: var(--aeox); text-decoration: none; }
+.term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--panel-2); border-bottom: 1px solid var(--border); font-size: 12.5px; font-family: var(--mono); color: var(--text-2); }
+.dot { width: 11px; height: 11px; border-radius: 50%; }
+.term-body { padding: 18px 20px; font-family: var(--mono); font-size: 12.8px; line-height: 1.85; white-space: pre-wrap; overflow-x: auto; }
+.c { color: var(--aeox); } .d { color: var(--text-3); } .g { color: var(--ok); }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">aeox<em>-cli</em></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="demo-doctor.html">体检</a>
+      <a href="demo-diagnostics.html">构建诊断</a>
+      <a href="demo-rules.html" class="here">规则注入</a>
+      <a href="demo-agents.html">Agents</a>
+      <a class="hot" href="index.html">v0.1.0</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="crumb">演示 3/4 · <b>ai-rules 插件</b> — 上下文规则注入</div>
+    <h1>8 条规则，只在需要时出现</h1>
+    <p>选择"最近编辑的文件"与用户消息，看规则如何被点亮并注入系统提示词</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="ctx">
+    <h3>最近编辑的文件（globs 触发源）</h3>
+    <div class="chips" id="fileChips">
+      <span class="chip on" data-file="pages/Index.ets">pages/Index.ets</span>
+      <span class="chip" data-file="来啦系列软件原型设计/番茄来啦/UI演示.html">原型设计/…/UI演示.html</span>
+      <span class="chip" data-file="lib/doctor.ts">lib/doctor.ts</span>
+      <span class="chip" data-file="package.json">package.json</span>
+      <span class="chip" data-file="README.md">README.md</span>
+    </div>
+  </div>
+
+  <div class="ctx">
+    <h3>用户消息（keywords 触发源）</h3>
+    <div class="chips" id="msgChips">
+      <span class="chip on" data-msg="帮我把这个原型高度还原到 ArkTS 页面">"帮我把这个原型高度还原到 ArkTS 页面"</span>
+      <span class="chip" data-msg="应用启动就闪退，帮我排查一下崩溃">"应用启动就闪退，帮我排查一下崩溃"</span>
+      <span class="chip" data-msg="写一个 Node 后端接口，用 express 起服务">"写一个 Node 后端接口，用 express 起服务"</span>
+      <span class="chip" data-msg="改一下首页文案和配色">"改一下首页文案和配色"</span>
+    </div>
+  </div>
+
+  <div class="rules" id="ruleGrid"></div>
+
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#f87171"></span><span class="dot" style="background:#fbbf24"></span><span class="dot" style="background:#34d399"></span>注入系统提示词的内容<span style="margin-left:auto;color:var(--text-3);font-size:11.5px" id="cnt"></span></div>
+    <div class="term-body" id="preview"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 YAOLUMEN TECHNOLOGIES LTD · aeox-cli v0.1.0</span>
+    <span><a href="index.html">← 返回首页</a> · 独立第三方 · 基于 DevEco Code 官方扩展机制</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var RULES = [
+    { name: "general", desc: "通用 AI 编程准则（Karpathy 通病总结提炼），始终生效。", trigger: "alwaysApply: true", always: true,
+      match: function () { return true; } },
+    { name: "typescript", desc: "TS 语言规范：类型显式化、禁 any、接口定义习惯。", trigger: "globs: *.ts, *.tsx",
+      match: function (f) { return /\.tsx?$/.test(f); } },
+    { name: "node", desc: "Node 运行时约定：ESM、spawn Windows 纪律、pathToFileURL。", trigger: "globs: package.json, *.mjs · kw: node, 后端, express…",
+      match: function (f, m) { return /(^|\/)(package\.json|[^/]+\.mjs|[^/]+\.cjs)$/.test(f) || /node|npm|express|后端|接口开发/.test(m); } },
+    { name: "arkts", desc: "ArkTS/ArkUI 开发规范：装饰器用法、状态管理、组件约束。", trigger: "globs: *.ets · kw: arkts, 鸿蒙…",
+      match: function (f, m) { return /\.ets$/.test(f) || /arkts|arkui|harmonyos|鸿蒙|\bets\b/i.test(m); } },
+    { name: "web", desc: "HTML/CSS 原型规范：单文件自包含、双主题、手机壳。", trigger: "globs: *.html, *.css · kw: 原型, 网页…",
+      match: function (f, m) { return /\.(html|css)$/.test(f) || /html|css|原型|prototype|网页|协议页/.test(m); } },
+    { name: "harmony-prototype", desc: "鸿蒙原型编写约束：只用 ArkUI 可兑现特性（禁伪元素/vh/图标字体）。", trigger: "globs: **原型设计**/*.html",
+      match: function (f) { return /原型设计.*\.(html|css)$/.test(f); } },
+    { name: "prototype-to-arkts", desc: "原型→ArkTS 还原映射表：CSS→ArkUI 对照与取舍政策。", trigger: "globs: *.ets · kw: 还原, 设计稿…",
+      match: function (f, m) { return /\.ets$/.test(f) || /还原|设计稿|UI演示|原型实现/.test(m); } },
+    { name: "debugging", desc: "系统化调试方法论：复现→最小化→单点修改→验证。", trigger: "kw: debug, 报错, 崩溃, 闪退…",
+      match: function (f, m) { return /debug|bug|报错|崩溃|闪退|crash|error|异常|排查|不生效/i.test(m); } }
+  ];
+
+  var file = "pages/Index.ets";
+  var msg = "帮我把这个原型高度还原到 ArkTS 页面";
+  var grid = document.getElementById("ruleGrid");
+  var preview = document.getElementById("preview");
+
+  document.getElementById("fileChips").addEventListener("click", function (e) {
+    var c = e.target.closest(".chip");
+    if (!c) return;
+    var all = this.querySelectorAll(".chip");
+    for (var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i] === c);
+    file = c.getAttribute("data-file");
+    render();
+  });
+  document.getElementById("msgChips").addEventListener("click", function (e) {
+    var c = e.target.closest(".chip");
+    if (!c) return;
+    var all = this.querySelectorAll(".chip");
+    for (var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i] === c);
+    msg = c.getAttribute("data-msg");
+    render();
+  });
+
+  function render() {
+    var hit = [];
+    var html = "";
+    for (var i = 0; i < RULES.length; i++) {
+      var r = RULES[i];
+      var on = r.match(file, msg);
+      if (on) hit.push(r.name);
+      html += '<div class="rule' + (on ? " on" : "") + '">'
+        + '<span class="st">' + (on ? "✓ 注入" : "—") + "</span>"
+        + "<h4>" + r.name + "</h4><p>" + r.desc + '</p><div class="tg"><b>' + r.trigger + "</b></div></div>";
+    }
+    grid.innerHTML = html;
+
+    var lines = [];
+    lines.push('<span class="d">// ===== 每次请求都会注入 =====</span>');
+    lines.push('<span class="c">&lt;aeox&gt;</span>');
+    lines.push('<span class="d">aeox-cli v0.1.0 已启用 — 开发增强层（工具 13 / 规则 8 / 技能 2）…</span>');
+    lines.push('<span class="c">&lt;/aeox&gt;</span>');
+    lines.push("");
+    lines.push('<span class="d">// ===== ai-rules 插件按上下文选配（命中 ' + hit.length + " 条）=====</span>");
+    lines.push('<span class="c">&lt;ai-rules&gt;</span>');
+    for (var h = 0; h < hit.length; h++) {
+      lines.push('<span class="g">## Rule: ' + hit[h] + "</span>");
+      lines.push('<span class="d">  …规则全文（约束本请求的编码行为）…</span>');
+    }
+    lines.push('<span class="c">&lt;/ai-rules&gt;</span>');
+    preview.innerHTML = lines.join("\n");
+    document.getElementById("cnt").textContent = "系统提示词 + " + hit.length + " 条规则";
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演示 · aeox doctor — aeox-cli</title>
+<style>
+:root {
+  --bg: #faf9f6; --bg-2: #f3f1ea; --panel: #ffffff; --panel-2: #f3f1ea;
+  --border: #e8e5dd; --border-2: #d9d5ca;
+  --text: #1a1815; --text-2: #6e6a61; --text-3: #a8a49a;
+  --aeox: #d1451b; --aeox-deep: #b23a15; --aeox-dim: rgba(209, 69, 27, 0.07);
+  --accent: #b07d2b; --ok: #3e7c4f; --err: #b3261e;
+  --serif: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+  --mono: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+html { scrollbar-gutter: stable; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.7; min-height: 100vh; }
+a { color: var(--aeox); text-decoration: none; }
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+nav { position: sticky; top: 0; z-index: 10; background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+nav .wrap { max-width: 1080px; }
+.nav-in { display: flex; align-items: center; gap: 30px; height: 58px; }
+.brand { font-family: var(--serif); font-size: 19px; font-style: italic; color: var(--text); text-decoration: none; letter-spacing: -.3px; }
+.brand em { color: var(--aeox); }
+.brand:hover { color: var(--text); text-decoration: none; }
+.nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 13.5px; }
+.nav-links a { color: var(--text-2); text-decoration: none; }
+.nav-links a:hover, .nav-links a.here { color: var(--aeox); text-decoration: none; }
+.nav-links a.hot { color: var(--aeox); }
+@media (max-width: 640px) { .nav-links { gap: 14px; font-size: 12.5px; } .brand { font-size: 17px; } }
+
+header { text-align: center; padding: 52px 0 36px; }
+.crumb { font-family: var(--mono); font-size: 13px; color: var(--text-3); margin-bottom: 16px; }
+.crumb b { color: var(--aeox); font-weight: 500; }
+header h1 { font-size: clamp(28px, 4.5vw, 38px); font-family: var(--serif); font-weight: 400; letter-spacing: -.5px; }
+header p { color: var(--text-2); margin-top: 8px; }
+
+.controls { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 10px 0 26px; }
+.seg { display: inline-flex; border: 1px solid var(--border-2); border-radius: 10px; overflow: hidden; font-size: 13.5px; }
+.seg button { background: var(--panel); color: var(--text-2); border: none; padding: 9px 18px; cursor: pointer; font-family: var(--sans); font-size: 13.5px; }
+.seg button + button { border-left: 1px solid var(--border-2); }
+.seg button.on { background: var(--aeox); color: #fff; font-weight: 600; }
+.run { background: var(--aeox); color: #fff; font-weight: 700; border: none; border-radius: 10px; padding: 10px 26px; font-size: 14.5px; cursor: pointer; font-family: var(--mono); }
+.run:hover { background: var(--aeox-deep); }
+.run:disabled { opacity: .45; cursor: default; }
+
+.term { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 14px 40px rgba(26,24,21,0.08); }
+.term-bar { display: flex; align-items: center; gap: 8px; padding: 11px 16px; background: var(--panel-2); border-bottom: 1px solid var(--border); }
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.term-title { margin-left: 8px; font-size: 12.5px; color: var(--text-3); font-family: var(--mono); }
+#out { padding: 18px 20px; font-family: var(--mono); font-size: 13.5px; line-height: 1.95; min-height: 430px; white-space: pre-wrap; overflow-x: auto; }
+.p { color: var(--aeox); } .g { color: var(--ok); } .y { color: var(--accent); } .r { color: var(--err); } .d { color: var(--text-3); }
+.cursor { display: inline-block; width: 8px; height: 15px; background: var(--aeox); vertical-align: -2px; animation: blink 0.9s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.hint { margin: 22px auto 26px; max-width: 660px; text-align: center; font-size: 13px; color: var(--text-3); }
+
+footer { border-top: 1px solid var(--border); }
+.foot-in { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 24px 0 34px; font-size: 12.5px; color: var(--text-3); }
+footer a { color: var(--text-3); text-decoration: none; }
+footer a:hover { color: var(--aeox); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">aeox<em>-cli</em></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="demo-doctor.html" class="here">体检</a>
+      <a href="demo-diagnostics.html">构建诊断</a>
+      <a href="demo-rules.html">规则注入</a>
+      <a href="demo-agents.html">Agents</a>
+      <a class="hot" href="index.html">v0.1.0</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="crumb">演示 1/4 · <b>aeox doctor</b> — 环境体检</div>
+    <h1>13 项检查，一眼看清部署状态</h1>
+    <p>选择一个场景，点击运行 —— 完整还原真实 CLI 的输出行为</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="controls">
+    <div class="seg" id="seg">
+      <button data-mode="ok" class="on">全部通过</button>
+      <button data-mode="warn">制造 1 个 WARN</button>
+      <button data-mode="fail">制造 1 个 FAIL</button>
+    </div>
+    <button class="run" id="runBtn">▶ 运行 aeox doctor</button>
+  </div>
+
+  <div class="term">
+    <div class="term-bar"><span class="dot" style="background:#f87171"></span><span class="dot" style="background:#fbbf24"></span><span class="dot" style="background:#34d399"></span><span class="term-title">PowerShell — aeox doctor</span></div>
+    <div id="out"><span class="d">$ 点击"运行"开始体检…</span></div>
+  </div>
+
+  <p class="hint">真实场景对照：WARN = skills/ 未链接（跑 <b>aeox install</b> 即修复）；FAIL = devecocli 不可达（检查 DevEco Code 安装）。非零退出码会阻止 CI 流水线继续。</p>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 YAOLUMEN TECHNOLOGIES LTD · aeox-cli v0.1.0</span>
+    <span><a href="index.html">← 返回首页</a> · 独立第三方 · 基于 DevEco Code 官方扩展机制</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var CHECKS = [
+    ["Node.js runtime", "v24.14.1"],
+    ["Repo assets", "tools + plugin + 8 rules"],
+    ["Repo dependencies", "@opencode-ai/plugin installed"],
+    ["DevEco Code config", "C:\\Users\\you\\.config\\deveco"],
+    ["Link tools/", "-> aeox-cli repo"],
+    ["Link rules/", "-> aeox-cli repo"],
+    ["Link plugin/", "-> aeox-cli repo"],
+    ["Link command/", "-> aeox-cli repo"],
+    ["Skills", "2 linked -> repo"],
+    ["Plugin registration", "ai-rules + build-diagnostics"],
+    ["deveco command", "npm global deveco found"],
+    ["devecocli", "cli.js resolvable"],
+    ["DevEco Studio SDK", "found (C:\\Program Files\\Huawei\\DevEco Studio)"]
+  ];
+  var WARN_INDEX = 8;   // Skills
+  var FAIL_INDEX = 11;  // devecocli
+  var mode = "ok";
+  var running = false;
+
+  var seg = document.getElementById("seg");
+  seg.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || running) return;
+    mode = b.getAttribute("data-mode");
+    var all = seg.querySelectorAll("button");
+    for (var i = 0; i < all.length; i++) all[i].classList.toggle("on", all[i] === b);
+  });
+
+  function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function pad(s, n) {
+    while (s.length < n) s += " ";
+    return s;
+  }
+
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  async function typeInto(el, html, speed) {
+    var cur = document.createElement("span");
+    cur.className = "cursor";
+    el.appendChild(cur);
+    for (var i = 0; i < html.length; i++) {
+      cur.insertAdjacentHTML("beforebegin", html[i]);
+      if (html[i] !== " ") await sleep(speed);
+    }
+    el.removeChild(cur);
+  }
+
+  async function run() {
+    if (running) return;
+    running = true;
+    var btn = document.getElementById("runBtn");
+    btn.disabled = true;
+    btn.textContent = "运行中…";
+    var out = document.getElementById("out");
+    out.innerHTML = "";
+
+    var line1 = document.createElement("div");
+    out.appendChild(line1);
+    await typeInto(line1, 'aeox doctor', 14);
+    await sleep(150);
+
+    var head = document.createElement("div");
+    head.innerHTML = '<span class="d">aeox doctor  - environment health check</span><span class="d"></span>';
+    out.appendChild(head);
+    await sleep(120);
+
+    for (var i = 0; i < CHECKS.length; i++) {
+      var state = "ok";
+      var detail = CHECKS[i][1];
+      if (mode === "warn" && i === WARN_INDEX) {
+        state = "warn";
+        detail = "0/2 linked (run: aeox install)";
+      } else if (mode === "fail" && i === FAIL_INDEX) {
+        state = "fail";
+        detail = "cli.js missing (reinstall DevEco Code)";
+      }
+      var mark = state === "ok" ? '<span class="g">[ OK ]</span>' : state === "warn" ? '<span class="y">[WARN]</span>' : '<span class="r">[FAIL]</span>';
+      var line = document.createElement("div");
+      out.appendChild(line);
+      line.innerHTML = "  " + mark + " " + esc(pad(CHECKS[i][0], 24)) + ' <span class="d">' + esc(detail) + "</span>";
+      await sleep(state === "ok" ? 90 : 260);
+    }
+
+    await sleep(220);
+    var summary = document.createElement("div");
+    var br = document.createElement("div");
+    br.innerHTML = "&nbsp;";
+    out.appendChild(br);
+    out.appendChild(summary);
+    var text = mode === "ok" ? "all checks passed"
+      : mode === "warn" ? "all checks passed with 1 warnings"
+      : "1 failed, 0 warnings";
+    var cls = mode === "ok" ? "g" : mode === "warn" ? "y" : "r";
+    await typeInto(summary, "", 0);
+    summary.innerHTML = '<span class="' + cls + '">' + text + "</span>";
+    if (mode !== "ok") {
+      var tip = document.createElement("div");
+      tip.innerHTML = '<span class="d">exit code ' + (mode === "fail" ? "1" : "0") + "</span>";
+      out.appendChild(tip);
+    }
+    running = false;
+    btn.disabled = false;
+    btn.textContent = "▶ 再跑一次";
+  }
+
+  document.getElementById("runBtn").addEventListener("click", run);
+})();
+</script>
+</body>
+</html>

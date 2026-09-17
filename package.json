@@ -1,0 +1,29 @@
+{
+  "name": "aeox-cli",
+  "version": "0.1.0",
+  "description": "Dual-stack (HarmonyOS + Node.js) AI coding environment enhancement package for DevEco Code (opencode)",
+  "license": "MIT",
+  "author": "YAOLUMEN TECHNOLOGIES LTD",
+  "homepage": "https://cli.aeox.uk",
+  "keywords": ["harmonyos", "arkts", "deveco", "opencode", "ai-coding", "cli", "devtools"],
+  "type": "module",
+  "bin": {
+    "aeox": "bin/aeox.ts"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "tools",
+    "rules",
+    "skills",
+    "plugin",
+    "command",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "1.17.9"
+  }
+}

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演示 · 构建诊断 — aeox-cli</title>
+<style>
+:root {
+  --bg: #faf9f6; --bg-2: #f3f1ea; --panel: #ffffff; --panel-2: #f3f1ea;
+  --border: #e8e5dd; --border-2: #d9d5ca;
+  --text: #1a1815; --text-2: #6e6a61; --text-3: #a8a49a;
+  --aeox: #d1451b; --aeox-deep: #b23a15; --aeox-dim: rgba(209, 69, 27, 0.07);
+  --accent: #b07d2b; --ok: #3e7c4f; --err: #b3261e;
+  --serif: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+  --mono: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+html { scrollbar-gutter: stable; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.7; min-height: 100vh; }
+a { color: var(--aeox); text-decoration: none; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+nav { position: sticky; top: 0; z-index: 10; background: rgba(250, 249, 246, 0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+nav .wrap { max-width: 1080px; }
+.nav-in { display: flex; align-items: center; gap: 30px; height: 58px; }
+.brand { font-family: var(--serif); font-size: 19px; font-style: italic; color: var(--text); text-decoration: none; letter-spacing: -.3px; }
+.brand em { color: var(--aeox); }
+.brand:hover { color: var(--text); text-decoration: none; }
+.nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 13.5px; }
+.nav-links a { color: var(--text-2); text-decoration: none; }
+.nav-links a:hover, .nav-links a.here { color: var(--aeox); text-decoration: none; }
+.nav-links a.hot { color: var(--aeox); }
+@media (max-width: 640px) { .nav-links { gap: 14px; font-size: 12.5px; } .brand { font-size: 17px; } }
+
+header { text-align: center; padding: 52px 0 30px; }
+.crumb { font-family: var(--mono); font-size: 13px; color: var(--text-3); margin-bottom: 16px; }
+.crumb b { color: var(--aeox); font-weight: 500; }
+header h1 { font-size: clamp(28px, 4.5vw, 38px); font-family: var(--serif); font-weight: 400; letter-spacing: -.5px; }
+header p { color: var(--text-2); margin-top: 8px; }
+
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+@media (max-width: 900px) { .duo { grid-template-columns: 1fr; } }
+.term { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 14px 40px rgba(26,24,21,0.08); display: flex; flex-direction: column; }
+.term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--panel-2); border-bottom: 1px solid var(--border); font-size: 12.5px; font-family: var(--mono); color: var(--text-2); }
+.dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.term-bar .sz { margin-left: auto; color: var(--text-3); font-size: 11.5px; }
+.term-body { padding: 16px 18px; font-family: var(--mono); font-size: 12.3px; line-height: 1.75; overflow: auto; max-height: 520px; white-space: pre-wrap; word-break: break-all; }
+.d { color: var(--text-3); } .r { color: var(--err); } .g { color: var(--ok); } .c { color: var(--aeox); } .y { color: var(--accent); }
+.noise { color: var(--text-3); transition: opacity .5s; }
+.noise.off { opacity: .32; text-decoration: line-through; text-decoration-color: rgba(179,38,30,.55); }
+.real { transition: all .5s; border-radius: 6px; }
+.real.on { background: rgba(209,69,27,.07); box-shadow: 0 0 0 1px var(--aeox) inset; color: var(--text); }
+
+.empty { color: var(--text-3); font-style: italic; }
+#diagBody .head { color: var(--aeox); font-weight: 700; }
+#diagBody .row { padding: 2px 0; }
+#diagBody .lbl { color: var(--text-3); }
+#diagBody .fix { color: var(--ok); }
+.cursor { display: inline-block; width: 7px; height: 13px; background: var(--aeox); vertical-align: -1px; animation: blink .9s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.ctrl { text-align: center; margin: 26px 0 14px; }
+.run { background: var(--aeox); color: #fff; font-weight: 700; border: none; border-radius: 10px; padding: 12px 30px; font-size: 14.5px; cursor: pointer; font-family: var(--mono); box-shadow: 0 6px 18px rgba(209,69,27,.18); }
+.run:hover { background: var(--aeox-deep); }
+.run:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.hint { max-width: 700px; text-align: center; margin: 18px auto 26px; font-size: 13px; color: var(--text-3); }
+.hint code { font-family: var(--mono); color: var(--aeox); }
+
+footer { border-top: 1px solid var(--border); }
+.foot-in { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; padding: 24px 0 34px; font-size: 12.5px; color: var(--text-3); }
+footer a { color: var(--text-3); text-decoration: none; }
+footer a:hover { color: var(--aeox); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">aeox<em>-cli</em></a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="demo-doctor.html">体检</a>
+      <a href="demo-diagnostics.html" class="here">构建诊断</a>
+      <a href="demo-rules.html">规则注入</a>
+      <a href="demo-agents.html">Agents</a>
+      <a class="hot" href="index.html">v0.1.0</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="crumb">演示 2/4 · <b>build-diagnostics 插件</b> — tool.execute.after 钩子</div>
+    <h1>从日志泥潭到一份可执行的诊断</h1>
+    <p>左侧是真实的 ArkTS 编译失败输出，右侧是插件自动生成的结构化诊断</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="duo">
+    <div class="term">
+      <div class="term-bar"><span class="dot" style="background:#f87171"></span><span class="dot" style="background:#fbbf24"></span><span class="dot" style="background:#34d399"></span>构建输出 · 原始<span class="sz">38,412 字符</span></div>
+      <div class="term-body" id="rawBody"><span class="d">&gt; hvigor --mode module -p module=entry@default -p product=default analyze=normal
+&gt; hvigor wrapper
+
+======================== Hvigor System Info ========================
+Hvigor Version : 5.0.2
+Node Version   : v24.14.1
+WatchMode      : false
+=====================================================================
+
+&gt; Executing tasks : [default@PreBuild, default@CompileArkTS, ...]
+
+<span class="noise">ERROR: ArkTS:ERROR File: C:\Program Files\Huawei\DevEco Studio\sdk\...\@arkts.lang.d.ets:10505001
+     ERROR: ArkTS Compiler Error
+     Error Message: This kind of declaration is not allowed... (SDK benign 噪音 #1)</span>
+<span class="noise">ERROR: ArkTS:ERROR File: C:\Program Files\Huawei\DevEco Studio\sdk\...\@arkts.lang.d.ets:10505001
+     Error Message: ... (SDK benign 噪音 #2)</span>
+<span class="noise">ERROR: ArkTS:ERROR File: C:\...\@arkts.lang.d.ets:10505001
+     Error Message: ... (SDK benign 噪音 #3~#6，省略 12 行)</span>
+<span class="real" id="realErr"><span class="r">ERROR: ArkTS:ERROR File: D:\project\harmony-apps\QinziSchedule\entry\src\main\ets\pages\Index.ets:32:15
+     ERROR: ArkTS Compiler Error
+     Error Message: Type 'string' is not assignable to type 'number'. At File: D:\project\
+harmony-apps\QinziSchedule\entry\src\main\ets\pages\Index.ets:32:15</span></span>
+<span class="r">COMPILE RESULT:FAIL {ERROR:7}</span>
+<span class="d">... 以下还有 800+ 行 task trace 与依赖树输出 ...</span></span>
+      </div>
+    </div>
+
+    <div class="term">
+      <div class="term-bar"><span class="dot" style="background:#22d3ee"></span>模型实际看到的<span class="sz" id="diagSz">等待注入</span></div>
+      <div class="term-body" id="diagBody"><span class="empty">// 点击下方按钮，模拟 build-diagnostics 插件的 tool.execute.after 钩子
+// 它会在构建输出前自动注入结构化诊断摘要</span></div>
+    </div>
+  </div>
+
+  <div class="ctrl">
+    <button class="run" id="runBtn">▶ 注入 [aeox 构建诊断]</button>
+  </div>
+  <p class="hint">插件做了三件事：① 解析 <code>N ERROR: &lt;code&gt;</code> 与 <code>Error Message … At File: 文件:行:列</code>（含路径折行合并）② 白名单过滤 SDK 目录 / <code>@arkts.lang.d.ets</code> 的 benign 错误 ③ 摘要前置注入输出。对原生 <code>build_project</code> 与自研 <code>devecocli_build</code> 同时生效。</p>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 YAOLUMEN TECHNOLOGIES LTD · aeox-cli v0.1.0</span>
+    <span><a href="index.html">← 返回首页</a> · 独立第三方 · 基于 DevEco Code 官方扩展机制</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var running = false;
+  var runBtn = document.getElementById("runBtn");
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  async function typeLine(el, html, speed) {
+    var cur = document.createElement("span");
+    cur.className = "cursor";
+    el.appendChild(cur);
+    for (var i = 0; i < html.length; i++) {
+      cur.insertAdjacentHTML("beforebegin", html[i]);
+      if (html[i] !== " ") await sleep(speed);
+    }
+    el.removeChild(cur);
+  }
+
+  runBtn.addEventListener("click", async function () {
+    if (running) return;
+    running = true;
+    runBtn.disabled = true;
+    runBtn.textContent = "注入中…";
+    var body = document.getElementById("diagBody");
+    body.innerHTML = "";
+    document.getElementById("diagSz").textContent = "注入中…";
+
+    var noise = document.querySelectorAll(".noise");
+    for (var i = 0; i < noise.length; i++) noise[i].classList.add("off");
+    await sleep(300);
+    document.getElementById("realErr").classList.add("on");
+    await sleep(500);
+
+    var head = document.createElement("div");
+    body.appendChild(head);
+    await typeLine(head, "[aeox 构建诊断]", 10);
+    var sub = document.createElement("div");
+    sub.className = "d";
+    body.appendChild(sub);
+    await typeLine(sub, "解析 7 条 ERROR：1 条真实错误 + 6 条 SDK benign（已过滤）", 4);
+    body.appendChild(document.createElement("div"));
+
+    var blocks = [
+      ['<span class="c">❶ [10505001] ArkTS Compiler Error</span>'],
+      ['<span class="lbl">   文件：</span>entry/src/main/ets/pages/Index.ets'],
+      ['<span class="lbl">   位置：</span>32:15'],
+      ['<span class="lbl">   信息：</span>' + esc("Type 'string' is not assignable to type 'number'")],
+      ['&nbsp;'],
+      ['<span class="fix">   ✓ 建议下一步：检查第 32 行变量类型声明，或修正右侧表达式的类型。</span>']
+    ];
+    for (var b = 0; b < blocks.length; b++) {
+      var line = document.createElement("div");
+      line.className = "row";
+      body.appendChild(line);
+      if (blocks[b][0] === "&nbsp;") { line.innerHTML = "&nbsp;"; continue; }
+      await typeLine(line, blocks[b][0], 5);
+    }
+
+    body.appendChild(document.createElement("div"));
+    var foot = document.createElement("div");
+    foot.className = "d";
+    body.appendChild(foot);
+    await typeLine(foot, "原始输出 38,412 字符 → 诊断摘要 312 字符（压缩 99.2%）", 4);
+    document.getElementById("diagSz").textContent = "312 字符";
+    body.appendChild(document.createElement("div"));
+    var tail = document.createElement("div");
+    tail.className = "d";
+    tail.textContent = "—————— 以下为原始构建输出（已折叠噪音） ——————";
+    body.appendChild(tail);
+
+    running = false;
+    runBtn.disabled = false;
+    runBtn.textContent = "▶ 重新注入";
+  });
+})();
+</script>
+</body>
+</html>
