@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>aeox-cli — HarmonyOS + Node.js 双栈 AI 编程增强层</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"aeox-cli","applicationCategory":"DeveloperApplication","operatingSystem":"Windows","url":"https://cli.aeox.uk/","publisher":{"@type":"Organization","name":"AEOX","url":"https://aeox.uk/"}}
+</script>
 <style>
 :root {
   --paper: #faf9f6; --ink: #1a1815; --ink-2: #6e6a61; --ink-3: #a8a49a;
@@ -79,7 +82,7 @@ header h1 em { font-style: italic; color: var(--accent); }
 .foot-cta .l { display: inline-block; margin-top: 22px; font-size: 15px; color: var(--accent); }
 
 footer { border-top: 1px solid #e8e5dd; padding: 60px 0 0; font-size: 14px; color: var(--ink-2); }
-.foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 50px; }
+.foot-grid { display: grid; grid-template-columns: 1.5fr .8fr 1.3fr 1fr; gap: 40px; padding-bottom: 50px; }
 @media (max-width: 720px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
 .foot-logo { font-family: var(--serif); font-size: 30px; font-style: italic; line-height: 1.2; }
 .foot-logo em { color: var(--accent); }
@@ -92,6 +95,8 @@ footer li a:hover { color: var(--accent); text-decoration: none; }
 footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; color: var(--accent); }
 .foot-bar { border-top: 1px solid #e8e5dd; padding: 22px 0 30px; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-3); }
 .foot-bar .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; width: 100%; }
+.foot-bar a { color: var(--ink-2); }
+.foot-bar a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -246,40 +251,41 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <p class="foot-logo">aeox<em>-cli</em></p>
-        <p class="foot-desc">HarmonyOS + Node.js 双栈 AI 编程环境增强层。把一线经验固化成 AI 的肌肉记忆。</p>
+        <p class="foot-logo">AEOX <em>Lab</em></p>
+        <p class="foot-desc">一个独立实验室，构建横跨 SEO、AI、量化与东方能量的透明浏览器端工具。不臃肿、不追踪 —— view-source 即可验证。</p>
+        <p class="foot-desc" style="margin-top:10px; font-style:italic">An independent lab building transparent, browser-native tools across SEO, AI, quant and eastern energy. No bloat, no tracking — view-source and verify.</p>
       </div>
       <div>
-        <h4>页面</h4>
+        <h4>本站</h4>
         <ul>
           <li><a href="#features">特性</a></li>
           <li><a href="#quickstart">快速开始</a></li>
           <li><a href="#demos">交互演示</a></li>
+          <li><a href="https://github.com/yaolumen/aeox-cli" target="_blank" rel="noopener">GitHub 仓库</a></li>
         </ul>
       </div>
       <div>
-        <h4>演示</h4>
+        <h4>AEOX Network</h4>
         <ul>
-          <li><a href="demo-doctor.html">aeox doctor</a></li>
-          <li><a href="demo-diagnostics.html">构建诊断</a></li>
-          <li><a href="demo-rules.html">规则注入</a></li>
-          <li><a href="demo-agents.html">Agent 预设</a></li>
+          <li><a href="https://aeox.uk/" target="_blank" rel="noopener">AEOX</a> <i>AI Answer Engine Diagnostics</i></li>
+          <li><a href="https://anchor.aeox.uk/" target="_blank" rel="noopener">Anchor</a> <i>Content Automation Engine</i></li>
+          <li><a href="https://cli.aeox.uk/">aeox-cli</a> <i>AI Dev Toolbox</i></li>
+          <li><a href="https://shui.aeox.uk/" target="_blank" rel="noopener">Shui</a> <i>Eastern Energy Reports</i></li>
         </ul>
       </div>
       <div>
-        <h4>命令</h4>
+        <h4>资源与商店</h4>
         <ul>
-          <li><a href="#quickstart">安装 <i>aeox install</i></a></li>
-          <li><a href="#quickstart">体检 <i>aeox doctor</i></a></li>
-          <li><a href="#quickstart">状态 <i>aeox status</i></a></li>
-          <li><a href="#quickstart">会话内验证 <i>/aeox</i></a></li>
+          <li><a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free downloads</a> <i>go.aeox.uk</i></li>
+          <li><a href="https://ko-fi.com/yourname" target="_blank" rel="noopener">Ko-fi Shop</a> <i>Premium</i></li>
+          <li><a href="https://cli.aeox.uk/">cli.aeox.uk</a> <i>本站直链</i></li>
         </ul>
       </div>
     </div>
     <div class="foot-bar">
       <div class="wrap">
-        <span>© 2026 YAOLUMEN TECHNOLOGIES LTD · aeox-cli v0.1.0</span>
-        <span>独立第三方项目 · 基于 DevEco Code 官方扩展机制</span>
+        <span>© 2026 AEOX · aeox-cli — Part of the AEOX network</span>
+        <span>独立第三方项目 · 基于 DevEco Code 官方扩展机制 · <a href="https://go.aeox.uk/" target="_blank" rel="noopener">Free on go.aeox.uk</a> · <a href="https://ko-fi.com/yourname" target="_blank" rel="noopener">Premium on Ko-fi</a></span>
       </div>
     </div>
   </div>
