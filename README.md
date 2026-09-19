@@ -113,12 +113,22 @@ aeox-cli/
 └── site/                cli.aeox.uk 展示站源码（纯静态单文件，含 4 个交互演示页）
 ```
 
-## 路线图（0.1.1 候选）
+## 开发与发布
 
-- 修正 npm 包内 README 的"12 项体检"为 13 项（发布早于修正，需随版本更新）
+- 改动 `bin/`、`lib/` 后可先跑 `node build.mjs` 本地验证（产物在 `dist/`，不入库）
+- 发布新版本：
+  1. 更新 `package.json` 的 `version` → commit → push
+  2. npm 新建 **Granular Token**：对 `aeox-cli` 勾 Read and write (publish and stage)，并**创建时勾选 Bypass 2FA**（事后不可改；账号 2FA 为安全键时 CLI 发布必需）
+  3. `npm publish --registry=https://registry.npmjs.org`（prepack 自动构建 `dist/`；默认源 npmmirror 不支持发布）
+  4. 验证：`npm view aeox-cli version --registry=https://registry.npmjs.org`；npmmirror 数分钟内自动同步
+- npm Classic Token 已于 2025-11 移除；直连发布将于 2027-01 移除，届时需迁移到 Trusted Publishing（GitHub Actions OIDC）
+
+## 路线图（0.2.0 候选）
+
 - 泛化 agent / rules 中的个人化文案（来啦系列、com.cheeseopt 等示例化）
 - `doctor` 增加在线设备连通性检查（INFO 级，不阻断体检）
 - `store_screenshots` 批量截图 / `version_bump` / `new_app` 应用模板
+- 发布迁移到 Trusted Publishing（GitHub Actions OIDC）
 - 跨平台支持（macOS / Linux symlink）
 
 ## 许可
