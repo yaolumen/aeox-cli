@@ -1,10 +1,23 @@
+import fs from "node:fs"
 import path from "node:path"
 import os from "node:os"
 import { fileURLToPath } from "node:url"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
-export const REPO_ROOT = path.resolve(here, "..")
+// Walk up to the nearest package.json so this works both from source
+// (<root>/lib) and from the published build (<root>/dist/lib).
+function findRepoRoot(start: string): string {
+  let dir = path.resolve(start)
+  while (true) {
+    if (fs.existsSync(path.join(dir, "package.json"))) return dir
+    const parent = path.dirname(dir)
+    if (parent === dir) return path.resolve(start, "..")
+    dir = parent
+  }
+}
+
+export const REPO_ROOT = findRepoRoot(here)
 export const CONFIG_DIR = path.join(os.homedir(), ".config", "deveco")
 export const LINKED_SUBDIRS: string[] = ["tools", "rules", "plugin", "command"]
 export const DATA_SKILLS_DIR = path.join(os.homedir(), ".local", "share", "deveco", "skills")

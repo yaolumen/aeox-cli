@@ -27,7 +27,7 @@ function checkNode(): CheckResult {
   return {
     name: "Node.js runtime",
     state: ok ? "ok" : "fail",
-    detail: `${process.version}${ok ? "" : " (need >= 22.18 for TypeScript bin)"}`,
+    detail: `${process.version}${ok ? "" : " (need >= 22.18)"}`,
   }
 }
 

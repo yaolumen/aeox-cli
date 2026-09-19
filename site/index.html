@@ -66,10 +66,17 @@ header h1 em { font-style: italic; color: var(--accent); }
 .col li { padding: 9px 0; border-bottom: 1px dotted #e0dcd2; font-size: 15px; display: flex; justify-content: space-between; gap: 16px; }
 .col li i { font-family: var(--mono); font-style: normal; font-size: 12.5px; color: var(--accent); white-space: nowrap; }
 
-.code { background: #f3f1ea; border: 1px solid #e8e5dd; padding: 26px 30px; margin-top: 18px; overflow-x: auto; }
+.code { background: #f3f1ea; border: 1px solid #e8e5dd; padding: 26px 30px; margin-top: 18px; overflow-x: auto; position: relative; }
 .code pre { font-family: var(--mono); font-size: 13px; line-height: 2; color: var(--ink); }
 .code .c { color: var(--ink-3); }
 .code .p { color: var(--accent); }
+
+.copy-btn { position: absolute; top: 10px; right: 10px; font-family: var(--mono); font-size: 11.5px; padding: 4px 12px; background: var(--paper); border: 1px solid #e8e5dd; color: var(--ink-2); cursor: pointer; transition: all .15s; }
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-btn.done { border-color: var(--accent); color: var(--accent); }
+
+.prereq { margin-top: 16px; font-size: 13.5px; color: var(--ink-2); border-left: 2px solid var(--accent); padding: 4px 0 4px 14px; }
+.prereq b { color: var(--ink); font-weight: 600; }
 
 .demos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
 @media (max-width: 640px) { .demos { grid-template-columns: 1fr; } }
@@ -111,7 +118,7 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
       <a href="diagnostics.html">构建诊断</a>
       <a href="rules.html">规则注入</a>
       <a href="agents.html">Agents</a>
-      <a class="hot" href="#quickstart">v0.1.0</a>
+      <a class="hot" href="#quickstart">v0.1.1</a>
     </div>
   </div>
 </nav>
@@ -122,7 +129,7 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     <h1>让 AI 编程助手<br>真正<em>懂</em>鸿蒙。</h1>
     <p class="lede">aeox-cli 是一层薄薄的增强外挂：十三个工具、八条规则、四个角色、两个技能、两个插件。它不替代任何东西 —— 只是把一线经验固化成 AI 的肌肉记忆。</p>
     <p class="meta-line">
-      <span>version <b>0.1.0</b></span>
+      <span>version <b>0.1.1</b></span>
       <span>node <b>&gt;= 22.18</b></span>
       <span>cli deps <b>0</b></span>
       <span>fork <b>none</b></span>
@@ -169,11 +176,17 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     <div>
       <h2>两步启用，<span>随装随卸</span></h2>
       <p>一行命令装好并接线（幂等），一行命令验证。卸载只需移除链接与全局包 —— 宿主一个字节都不用改。</p>
-      <div class="code"><pre><span class="c"># 1. 一键安装：npm 全局安装 + junction 链接 + 插件注册（幂等）</span>
+      <div class="prereq"><b>前置条件</b>：Windows · Node.js ≥ 22.18 · <b>DevEco Code</b>（先安装并至少启动一次）。aeox-cli 是 DevEco Code 的增强外挂 —— 先有宿主才能接线；未装宿主时也能完成安装，但插件注册会被跳过，装了等于没装。</div>
+      <div class="code">
+        <button class="copy-btn" data-copy="iwr -useb https://cli.aeox.uk/install.ps1 | iex">复制安装命令</button>
+        <pre><span class="c"># 1. 一键安装：npm 全局安装 + junction 链接 + 插件注册（幂等）</span>
 <span class="p">$</span> iwr -useb https://cli.aeox.uk/install.ps1 | iex
-<span class="c">#    手动等价：npm install -g aeox-cli && aeox install</span>
+<span class="c">#    手动等价（两条分开执行；Windows PowerShell 5.1 不支持 &amp;&amp;）：</span>
+<span class="p">$</span> npm install -g aeox-cli
+<span class="p">$</span> aeox install
 <span class="c"># 2. 验证：13 项体检全绿，或在会话内输入 /aeox</span>
-<span class="p">$</span> aeox doctor</pre></div>
+<span class="p">$</span> aeox doctor</pre>
+      </div>
     </div>
   </div>
 
@@ -289,5 +302,32 @@ footer li i { font-family: var(--mono); font-style: normal; font-size: 12px; col
     </div>
   </div>
 </footer>
+<script>
+(function () {
+  function flash(btn) {
+    var orig = btn.textContent;
+    btn.textContent = "已复制 ✓";
+    btn.classList.add("done");
+    setTimeout(function () { btn.textContent = orig; btn.classList.remove("done"); }, 1600);
+  }
+  document.querySelectorAll(".copy-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var text = btn.getAttribute("data-copy") || "";
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { flash(btn); });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); flash(btn); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>

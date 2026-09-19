@@ -103,7 +103,7 @@ aeox version      版本号
 
 ```
 aeox-cli/
-├── bin/aeox.ts          CLI 入口（Node ≥ 22.18 原生运行 TS，零构建、零运行时依赖）
+├── bin/aeox.ts          CLI 入口（prepack 时经 build.mjs 剥离类型为 dist/ 纯 JS：Node 禁止 node_modules 内 TS 类型剥离，发布包不能直接跑 .ts）
 ├── lib/                 CLI 实现（paths / install / doctor / status / ui）
 ├── tools/               13 个自定义工具
 ├── rules/               8 条 AI 编程规则（frontmatter: name/globs/keywords/alwaysApply）

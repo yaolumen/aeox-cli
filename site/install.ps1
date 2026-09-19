@@ -28,6 +28,14 @@ if ($current -lt $required) {
 }
 Write-Host "[ OK ] Node.js $nodeVer" -ForegroundColor Green
 
+# 1.5 DevEco Code host (aeox-cli is an enhancement layer on top of it)
+$devecoCfg = Join-Path $env:USERPROFILE ".config\deveco"
+if (-not (Test-Path $devecoCfg)) {
+  Write-Host "[WARN] DevEco Code config not found ($devecoCfg)." -ForegroundColor Yellow
+  Write-Host "       aeox-cli is an enhancement for DevEco Code - install it first and launch once," -ForegroundColor Yellow
+  Write-Host "       otherwise plugin registration will be skipped." -ForegroundColor Yellow
+}
+
 # 2. Install globally (official registry - mirrors may lag on fresh releases)
 Write-Host "...   npm install -g aeox-cli" -ForegroundColor Cyan
 npm install -g aeox-cli --registry https://registry.npmjs.org
@@ -46,5 +54,5 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ""
-Write-Host "[ OK ] aeox-cli v0.1.0 ready. Verify with: aeox doctor" -ForegroundColor Green
+Write-Host "[ OK ] aeox-cli v0.1.1 ready. Verify with: aeox doctor" -ForegroundColor Green
 Write-Host "      Docs: https://cli.aeox.uk" -ForegroundColor Cyan
