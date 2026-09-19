@@ -13,8 +13,8 @@ export const bold = (s: string): string => paint("1", s)
 
 export function banner(version: string): void {
   console.log(cyan("   ▄▀▄ █▀▀ ▄▀▄ █ █     ▄▀▀ █   ▀█▀"))
-  console.log(cyan("   █▄█ █▄▄ █ █  █  ▀▀▀ █   █    █"))
-  console.log(cyan("   █▄█ █▄▄ ▀▄▀ █ █     ▀▄▄ █▄▄ ▄█▄"))
+  console.log(cyan("   █▀█ █▄▄ █ █  █  ▀▀▀ █   █    █"))
+  console.log(cyan("   █ █ █▄▄ ▀▄▀ █ █     ▀▄▄ █▄▄ ▄█▄"))
   console.log(`   ${bold("aeox-cli")} ${dim(`v${version}`)}  ${dim("dual-stack AI coding environment")}`)
   console.log()
 }
