@@ -4,7 +4,7 @@
 
 零 fork、零侵入：所有能力都通过官方扩展机制（自定义工具 / 规则 / 技能 / 插件 / 斜杠命令 / Agent 预设）注入，本仓库是这些增强资产的唯一源。
 
-- 主页：<https://cli.aeox.uk>
+- 主页：<https://aeox.uk/cli>
 - 许可：MIT © YAOLUMEN TECHNOLOGIES LTD
 
 ## 为什么需要它
@@ -24,7 +24,7 @@ aeox-cli 用一组针对性工具、规则与诊断插件，把这三件事变�
 一键安装（推荐）：
 
 ```powershell
-iwr -useb https://cli.aeox.uk/install.ps1 | iex
+iwr -useb https://aeox.uk/install.ps1 | iex
 ```
 
 或手动安装：
@@ -110,7 +110,7 @@ aeox-cli/
 ├── skills/              2 个自研技能
 ├── command/aeox.md      /aeox 斜杠命令
 ├── plugin/              2 个插件
-└── site/                cli.aeox.uk 展示站源码（纯静态单文件，含 4 个交互演示页）
+└── site/                展示站存档（产品页已并入主站 aeox.uk/cli；安装脚本由主站 public/install.ps1 承载）
 ```
 
 ## 开发与发布

@@ -1,5 +1,5 @@
-# aeox-cli installer - https://cli.aeox.uk
-# Usage: iwr -useb https://cli.aeox.uk/install.ps1 | iex
+# aeox-cli installer - https://aeox.uk/cli
+# Usage: iwr -useb https://aeox.uk/install.ps1 | iex
 $ErrorActionPreference = "Stop"
 
 Write-Host ""
@@ -54,5 +54,5 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ""
-Write-Host "[ OK ] aeox-cli v0.1.1 ready. Verify with: aeox doctor" -ForegroundColor Green
-Write-Host "      Docs: https://cli.aeox.uk" -ForegroundColor Cyan
+Write-Host "[ OK ] aeox-cli v0.1.2 ready. Verify with: aeox doctor" -ForegroundColor Green
+Write-Host "      Docs: https://aeox.uk/cli" -ForegroundColor Cyan
